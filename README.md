@@ -1,5 +1,7 @@
 # Better Reads 📚
 
+![Better Reads Screenshot](public/screenshot.png)
+
 A simple app to view your Goodreads reading history.
 
 ## Getting Started

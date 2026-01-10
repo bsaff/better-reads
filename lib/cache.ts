@@ -13,6 +13,9 @@ async function ensureCacheDir(): Promise<void> {
 }
 
 function getCachePath(userId: string): string {
+  if (!/^\d+$/.test(userId)) {
+    throw new Error("Invalid userId: must contain only digits");
+  }
   return path.join(CACHE_DIR, `${userId}.json`);
 }
 

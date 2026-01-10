@@ -22,7 +22,7 @@ export default function Home() {
             Better Reads
           </CardTitle>
           <CardDescription className="text-base text-muted-foreground">
-            Paste your Goodreads profile URL to see your reading history in a beautiful format
+            Paste a Goodreads profile URL to see their reading history and get gift recommendations.
           </CardDescription>
         </CardHeader>
         <CardContent>

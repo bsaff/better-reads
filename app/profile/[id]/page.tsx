@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { BackLink } from "@/components/BackLink";
 import { BookCard } from "@/components/BookCard";
+import { GiftSuggestionButton } from "@/components/GiftSuggestionButton";
 import { StatsHeader } from "@/components/StatsHeader";
 import { getCachedProfile } from "@/lib/cache";
 
@@ -28,16 +29,22 @@ export default async function ProfilePage({ params }: PageProps) {
             <BackLink />
           </div>
 
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-5xl">📚</span>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground" style={{ fontFamily: "var(--font-lora)" }}>
-                Reading History
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                {profile.shelf} shelf • Synced {new Date(profile.scrapedAt).toLocaleDateString()}
-              </p>
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <span className="text-5xl">📚</span>
+              <div>
+                <h1
+                  className="text-3xl md:text-4xl font-bold text-foreground"
+                  style={{ fontFamily: "var(--font-lora)" }}
+                >
+                  Reading History
+                </h1>
+                <p className="text-muted-foreground mt-1">
+                  {profile.shelf} shelf • Synced {new Date(profile.scrapedAt).toLocaleDateString()}
+                </p>
+              </div>
             </div>
+            <GiftSuggestionButton userId={id} />
           </div>
 
           <StatsHeader profile={profile} />

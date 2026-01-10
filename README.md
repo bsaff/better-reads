@@ -74,3 +74,33 @@ No API key or authentication required for public profiles!
 - Verify accuracy of book recommendations
 - Frame it as a gifting app for readers? or a more good reads replacement
 - Suggest me something else (with optional additional context like past suggestions and user preference, e.g. "more horror")
+
+## Future dev
+
+- Paginate / infinite scroll the reading history page.
+
+- Relationalize, store in supabase:
+    - `profiles`
+        - `id` (uuid, PK)
+        - `goodreads_user_id` (text, unique)
+        - `user_name` (text, nullable)
+        - `scraped_at` (timestamptz)
+    - `books`
+        - `goodreads_id` (text, PK)
+        - `title` (text)
+        - `author` (text)
+        - `isbn` (text, nullable)
+        - `pages` (int, nullable)
+        - `avg_rating` (numeric, nullable)
+        - `year_published` (text, nullable)
+        - `image_url` (text, nullable)
+        - `description` (text, nullable)
+    - `user_books`
+        - `id` (uuid, PK)
+        - `profile_id` (uuid, FK → profiles)
+        - `book_id` (text, FK → books.goodreads_id)
+        - `my_rating` (smallint, **indexed**)
+        - `my_rating_text` (text, nullable)
+        - `date_read` (date, nullable)
+        - `date_added` (date, nullable)
+        - `review` (text, nullable)

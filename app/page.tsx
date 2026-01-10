@@ -1,37 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { type ActionResult, get as loadProfile } from "@/actions/profile";
+import { useActionState } from "react";
+import { get as loadProfile } from "@/actions/profile";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 export default function Home() {
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(formData: FormData) {
-    setError(null);
-    setLoading(true);
-
-    try {
-      const result: ActionResult = await loadProfile(formData);
-      if (result?.error) {
-        setError(result.error);
-      }
-    } catch (err) {
-      // Redirect throws an error in Next.js, which is expected
-      // If we catch something else, show a generic error
-      if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
-        // This is expected, the redirect will happen
-        return;
-      }
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [state, formAction, isPending] = useActionState(loadProfile, null);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
@@ -49,19 +26,18 @@ export default function Home() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={handleSubmit} className="space-y-4">
+          <form action={formAction} className="space-y-4">
             <div className="space-y-2">
               <Input
                 name="url"
                 type="text"
                 placeholder="https://www.goodreads.com/user/show/12345-username"
                 className="h-12 text-base bg-input/50 border-border/50 placeholder:text-muted-foreground/50"
-                disabled={loading}
               />
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
             </div>
-            <Button type="submit" className="w-full h-12 text-base font-medium" disabled={loading}>
-              {loading ? (
+            <Button type="submit" className="w-full h-12 text-base font-medium" disabled={isPending}>
+              {isPending ? (
                 <span className="flex items-center gap-2">
                   <LoadingSpinner />
                   Loading books...

@@ -68,16 +68,34 @@ function parseItem(itemXml: string): Book {
   };
 }
 
-export function parseRSS(xml: string): Book[] {
+/**
+ * Extract user name from the RSS channel title (e.g., "Ben's bookshelf: read" → "Ben")
+ */
+function extractUserName(xml: string): string | null {
+  const titleMatch = xml.match(/<channel>[\s\S]*?<title>([^<]+)<\/title>/);
+  if (titleMatch) {
+    const title = titleMatch[1];
+    const nameMatch = title.match(/^(.+?)'s bookshelf/);
+    if (nameMatch) {
+      return nameMatch[1];
+    }
+  }
+  return null;
+}
+
+export function parseRSS(xml: string): { books: Book[]; userName: string | null } {
+  const userName = extractUserName(xml);
   const items = xml.split("<item>").slice(1);
-  return items.map((item) => {
+  const books = items.map((item) => {
     const itemXml = `<item>${item.split("</item>")[0]}</item>`;
     return parseItem(itemXml);
   });
+  return { books, userName };
 }
 
 export async function scrapeGoodreadsProfile(userId: string, shelf = "read"): Promise<ProfileData> {
   const books: Book[] = [];
+  let userName: string | null = null;
   let page = 1;
   let hasMore = true;
 
@@ -90,16 +108,21 @@ export async function scrapeGoodreadsProfile(userId: string, shelf = "read"): Pr
     }
 
     const xml = await response.text();
-    const pageBooks = parseRSS(xml);
+    const result = parseRSS(xml);
 
-    if (pageBooks.length === 0) {
+    // Capture the user name from the first page
+    if (page === 1) {
+      userName = result.userName;
+    }
+
+    if (result.books.length === 0) {
       hasMore = false;
     } else {
-      books.push(...pageBooks);
+      books.push(...result.books);
       page++;
 
       // Goodreads RSS returns 100 per page max
-      if (pageBooks.length < 100) {
+      if (result.books.length < 100) {
         hasMore = false;
       }
     }
@@ -107,6 +130,7 @@ export async function scrapeGoodreadsProfile(userId: string, shelf = "read"): Pr
 
   return {
     userId,
+    userName,
     shelf,
     totalBooks: books.length,
     scrapedAt: new Date().toISOString(),

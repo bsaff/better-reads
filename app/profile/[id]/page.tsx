@@ -37,7 +37,7 @@ export default async function ProfilePage({ params }: PageProps) {
                   className="text-3xl md:text-4xl font-bold text-foreground"
                   style={{ fontFamily: "var(--font-lora)" }}
                 >
-                  Reading History
+                  {profile.userName ? `${profile.userName}'s Reading History` : "Reading History"}
                 </h1>
                 <p className="text-muted-foreground mt-1">
                   {profile.shelf} shelf • Synced {new Date(profile.scrapedAt).toLocaleDateString()}

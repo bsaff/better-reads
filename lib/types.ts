@@ -18,6 +18,7 @@ export interface Book {
 
 export interface ProfileData {
   userId: string;
+  userName: string | null;
   shelf: string;
   totalBooks: number;
   scrapedAt: string;

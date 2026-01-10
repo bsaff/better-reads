@@ -95,7 +95,7 @@ export function GiftSuggestionButton({ userId }: GiftSuggestionButtonProps) {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <Button className="gap-2">
           <Gift className="h-4 w-4" />
           <span className="hidden sm:inline">Suggest a Gift</span>
         </Button>

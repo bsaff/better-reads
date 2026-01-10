@@ -8,7 +8,7 @@ export interface ActionResult {
   error?: string;
 }
 
-export async function get(formData: FormData): Promise<ActionResult> {
+export async function get(_prevState: ActionResult | null, formData: FormData): Promise<ActionResult> {
   const url = formData.get("url") as string;
 
   if (!url) {

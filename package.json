@@ -1,0 +1,12 @@
+{
+  "name": "better_reads",
+  "version": "1.0.0",
+  "description": "Scrape and manage your Goodreads reading data",
+  "main": "scrape.js",
+  "scripts": {
+    "scrape": "node scrape.js"
+  },
+  "keywords": ["goodreads", "books", "reading", "scraper"],
+  "author": "Ben",
+  "license": "MIT"
+}

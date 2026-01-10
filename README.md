@@ -1,78 +1,66 @@
 # Better Reads 📚
 
-A simple tool to scrape your Goodreads reading data into a local JSON file.
+A simple interface to view your Goodreads reading history.
 
-## Usage
+## Getting Started
 
 ```bash
-# Scrape your books (default: user 23506884, shelf "read")
-npm run scrape
+# Install dependencies
+npm install
 
-# Scrape a specific user and shelf
-node scrape.js <user_id> <shelf>
-
-# Examples
-node scrape.js 23506884 read
-node scrape.js 23506884 to-read
-node scrape.js 23506884 favorites
+# Start the development server
+npm run dev
 ```
 
-## Finding Your User ID
+Open [http://localhost:3000](http://localhost:3000) and paste your Goodreads profile URL.
 
-Your Goodreads user ID is in your profile URL:
+## Features
+
+- Load any Goodreads profile via URL
+- Stats overview: total books, pages read, average rating, reviews
+- Book cards with covers, ratings, dates, and reviews
+- Local caching for instant reload
+
+## Finding Your Profile URL
+
+Your Goodreads profile URL looks like:
 ```
-https://www.goodreads.com/user/show/23506884-ben
-                                    ^^^^^^^^
-                                    This is your user ID
-```
-
-## Output
-
-The scraper creates `goodreads_books.json` with the following structure:
-
-```json
-{
-  "userId": "23506884",
-  "shelf": "read",
-  "totalBooks": 359,
-  "scrapedAt": "2026-01-10T20:01:00.000Z",
-  "books": [
-    {
-      "title": "Book Title",
-      "author": "Author Name",
-      "bookId": "12345",
-      "isbn": "0123456789",
-      "pages": 300,
-      "avgRating": 4.2,
-      "myRating": 5,
-      "myRatingText": "it was amazing",
-      "dateRead": "Wed, 10 Dec 2025 00:00:00 +0000",
-      "dateAdded": "Wed, 10 Dec 2025 19:04:54 -0800",
-      "yearPublished": "2020",
-      "imageUrl": "https://...",
-      "review": "Your review text...",
-      "description": "Book description..."
-    }
-  ]
-}
+https://www.goodreads.com/user/show/23506884-username
 ```
 
-## Rating Scale
+1. Go to [goodreads.com](https://www.goodreads.com)
+2. Click your profile avatar
+3. Click "Profile"
+4. Copy the URL from your browser
 
-- `5` - it was amazing
-- `4` - really liked it
-- `3` - liked it
-- `2` - it was ok
-- `1` - did not like it
-- `0` - not rated
+## Development
+
+```bash
+# Run tests
+npm test
+
+# Run tests once
+npm run test:run
+
+# Build for production
+npm run build
+```
 
 ## How It Works
 
-Goodreads provides public RSS feeds for user bookshelves. This tool:
+Goodreads provides public RSS feeds for user bookshelves. This app:
 
-1. Fetches the RSS feed for the specified user/shelf
-2. Parses the XML to extract book data
-3. Paginates through all results (100 books per page)
-4. Saves everything to a JSON file
+1. Parses the user ID from the profile URL
+2. Fetches the RSS feed for the user's "read" shelf
+3. Caches the data locally in `cache/{userId}.json`
+4. Renders the books in a beautiful grid layout
 
 No API key or authentication required for public profiles!
+
+## Tech Stack
+
+- Next.js 16 with App Router
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui components
+- Vitest for testing

@@ -1,6 +1,6 @@
 # Better Reads 📚
 
-A simple interface to view your Goodreads reading history.
+A simple app to view your Goodreads reading history.
 
 ## Getting Started
 
@@ -64,3 +64,13 @@ No API key or authentication required for public profiles!
 - Tailwind CSS v4
 - shadcn/ui components
 - Vitest for testing
+
+
+## Future features
+
+- User profile support
+- Saved gift ideas
+- Saved "friend/family" members for users
+- Verify accuracy of book recommendations
+- Frame it as a gifting app for readers? or a more good reads replacement
+- Suggest me something else (with optional additional context like past suggestions and user preference, e.g. "more horror")

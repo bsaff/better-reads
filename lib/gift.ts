@@ -1,5 +1,17 @@
 import type OpenAI from "openai";
-import type { Book } from "@/lib/types";
+import { fetchBookCover } from "@/lib/openLibrary";
+import type { Book, BookRecommendation } from "@/lib/types";
+
+const MAX_BOOKS_FOR_PROMPT = 50;
+
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
 
 export function formatBooksForPrompt(books: Book[]): string {
   return books
@@ -23,24 +35,35 @@ This reader has rated the following books 5 stars (their absolute favorites):
 
 ${booksContext}
 
-Based on their taste, recommend ONE specific book that would make a great gift. The book should:
+Based on their taste, recommend FIVE specific books that would make great gifts. Each book should:
 1. NOT be one they've already read (listed above)
 2. Match their apparent preferences in genre, style, and themes
 3. Be a well-regarded book that makes a thoughtful gift
 
-Provide your recommendation in this format:
-- Book title and author
-- A brief explanation (2-3 sentences) of why this would be perfect for them based on their favorites
-- What makes this book gift-worthy
+Respond with a JSON object in this exact format:
+{
+  "recommendations": [
+    {
+      "title": "Book Title",
+      "author": "Author Name",
+      "year": 2020,
+      "genre": "Fiction / Mystery / etc.",
+      "pageCount": 350,
+      "reason": "A brief 1-2 sentence explanation of why this would be perfect for them."
+    }
+  ]
+}
 
-Keep your response concise and warm, as if you're helping a friend pick out a gift.`;
+Include all 5 recommendations in the array. Use null for year or pageCount if unknown.`;
 }
 
 export function filterFiveStarBooks(books: Book[]): Book[] {
-  return books.filter((book) => book.myRating === 5);
+  const fiveStars = books.filter((book) => book.myRating === 5);
+  const shuffled = shuffleArray(fiveStars);
+  return shuffled.slice(0, MAX_BOOKS_FOR_PROMPT);
 }
 
-export async function generateGiftRecommendation(books: Book[], openaiClient: OpenAI): Promise<string> {
+export async function generateGiftRecommendation(books: Book[], openaiClient: OpenAI): Promise<BookRecommendation[]> {
   const booksContext = formatBooksForPrompt(books);
   const prompt = buildGiftPrompt(booksContext);
 
@@ -52,15 +75,30 @@ export async function generateGiftRecommendation(books: Book[], openaiClient: Op
         content: prompt,
       },
     ],
-    max_tokens: 500,
+    response_format: { type: "json_object" },
+    max_tokens: 1500,
     temperature: 0.7,
   });
 
-  const recommendation = response.choices[0]?.message?.content;
+  const content = response.choices[0]?.message?.content;
 
-  if (!recommendation) {
-    throw new Error("Failed to generate a recommendation");
+  if (!content) {
+    throw new Error("Failed to generate recommendations");
   }
 
-  return recommendation;
+  const parsed = JSON.parse(content) as { recommendations: Omit<BookRecommendation, "imageUrl">[] };
+
+  if (!parsed.recommendations || !Array.isArray(parsed.recommendations)) {
+    throw new Error("Invalid response format");
+  }
+
+  // Fetch cover images in parallel
+  const enriched = await Promise.all(
+    parsed.recommendations.map(async (rec) => ({
+      ...rec,
+      imageUrl: await fetchBookCover(rec.title, rec.author),
+    })),
+  );
+
+  return enriched;
 }

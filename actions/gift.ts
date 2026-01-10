@@ -3,6 +3,7 @@
 import OpenAI from "openai";
 import { getCachedProfile } from "@/lib/cache";
 import { filterFiveStarBooks, generateGiftRecommendation } from "@/lib/gift";
+import type { BookRecommendation } from "@/lib/types";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -10,7 +11,7 @@ const openai = new OpenAI({
 
 export interface GiftSuggestionResult {
   success: boolean;
-  recommendation?: string;
+  recommendations?: BookRecommendation[];
   error?: string;
   fiveStarCount?: number;
 }
@@ -32,17 +33,17 @@ export async function suggestGift(userId: string): Promise<GiftSuggestionResult>
   }
 
   try {
-    const recommendation = await generateGiftRecommendation(fiveStarBooks, openai);
+    const recommendations = await generateGiftRecommendation(fiveStarBooks, openai);
     return {
       success: true,
-      recommendation,
+      recommendations,
       fiveStarCount: fiveStarBooks.length,
     };
   } catch (err) {
     console.error("Gift recommendation error:", err);
     return {
       success: false,
-      error: "Failed to generate recommendation. Please try again.",
+      error: "Failed to generate recommendations. Please try again.",
     };
   }
 }

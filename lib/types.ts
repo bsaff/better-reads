@@ -23,3 +23,13 @@ export interface ProfileData {
   scrapedAt: string;
   books: Book[];
 }
+
+export interface BookRecommendation {
+  title: string;
+  author: string;
+  year: number | null;
+  genre: string;
+  pageCount: number | null;
+  reason: string;
+  imageUrl: string | null;
+}

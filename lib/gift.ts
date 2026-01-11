@@ -100,7 +100,7 @@ export async function generateGiftRecommendation(books: Book[], openaiClient: Op
         },
       },
     },
-    reasoning_effort: "low",
+    reasoning_effort: "minimal",
     max_completion_tokens: 4000,
   });
 

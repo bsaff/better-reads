@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useActionState, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
 import { get as loadProfile } from "@/actions/profile";
-import { RecentProfileCard } from "@/components/RecentProfileCard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { RecentProfileCard } from "@/components/RecentProfileCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { extractUserIdFromUrl } from "@/lib/scraper";
 import { getRecentProfile } from "@/lib/recent-profile";
+import { extractUserIdFromUrl } from "@/lib/scraper";
 
 export default function Home() {
   const [state, formAction, isPending] = useActionState(loadProfile, null);

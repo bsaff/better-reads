@@ -1,6 +1,6 @@
 "use client";
 
-import { User, ArrowRight } from "lucide-react";
+import { ArrowRight, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface RecentProfileCardProps {

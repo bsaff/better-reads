@@ -1,16 +1,20 @@
 import type OpenAI from "openai";
-import { fetchBookCover } from "@/lib/openLibrary";
+import { fetchBookCover } from "@/lib/open-library";
 import type { Book, BookRecommendation } from "@/lib/types";
+import { shuffleArray } from "@/lib/utils/array";
 
 const MAX_BOOKS_FOR_PROMPT = 50;
 
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
+export function buildGiftSystemMessage(): string {
+  return `You are a book-recommendation assistant. Respond only with JSON, no markdown or code fences.
+
+Requirements:
+- Follow the provided JSON schema exactly; do not add extra fields.
+- Return exactly five recommendations.
+- Do not recommend any book that appears in the favorite 5-star list.
+- Do not repeat titles or authors across the five results.
+- If year or pageCount is unknown, use null (do not guess).
+- Never use invented facts; prefer null rather than speculation.`;
 }
 
 export function formatBooksForPrompt(books: Book[]): string {
@@ -29,18 +33,11 @@ export function formatBooksForPrompt(books: Book[]): string {
 }
 
 export function buildGiftPrompt(booksContext: string): string {
-  return `You are a thoughtful book recommender helping someone find the perfect book gift for a friend.
-
-This reader has rated the following books 5 stars (their absolute favorites):
+  return `The reader rated these books 5 stars (favorites):
 
 ${booksContext}
 
-Based on their taste, recommend FIVE specific books that would make great gifts. Each book should:
-1. NOT be one they've already read (listed above)
-2. Match their apparent preferences in genre, style, and themes
-3. Be a well-regarded book that makes a thoughtful gift
-
-Respond with a JSON object in this exact format:
+Recommend five books to the user that they haven't read yet and are likely to enjoy based on their favorite reads. Respond using this JSON shape:
 {
   "recommendations": [
     {
@@ -52,9 +49,7 @@ Respond with a JSON object in this exact format:
       "reason": "A brief 1-2 sentence explanation of why this would be perfect for them."
     }
   ]
-}
-
-Include all 5 recommendations in the array. Use null for year or pageCount if unknown.`;
+}`;
 }
 
 export function filterFiveStarBooks(books: Book[]): Book[] {
@@ -66,24 +61,63 @@ export function filterFiveStarBooks(books: Book[]): Book[] {
 export async function generateGiftRecommendation(books: Book[], openaiClient: OpenAI): Promise<BookRecommendation[]> {
   const booksContext = formatBooksForPrompt(books);
   const prompt = buildGiftPrompt(booksContext);
+  const systemMessage = buildGiftSystemMessage();
 
   const response = await openaiClient.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-5-mini",
     messages: [
+      {
+        role: "system",
+        content: systemMessage,
+      },
       {
         role: "user",
         content: prompt,
       },
     ],
-    response_format: { type: "json_object" },
-    max_tokens: 1500,
-    temperature: 0.7,
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "book_recommendations",
+        schema: {
+          type: "object",
+          properties: {
+            recommendations: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  author: { type: "string" },
+                  year: { type: "number" },
+                  genre: { type: "string" },
+                  pageCount: { type: "number" },
+                  reason: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    reasoning_effort: "low",
+    max_completion_tokens: 4000,
   });
 
-  const content = response.choices[0]?.message?.content;
+  const choice = response.choices[0];
+  const finishReason = choice?.finish_reason;
+  const content = choice?.message?.content;
 
   if (!content) {
-    throw new Error("Failed to generate recommendations");
+    console.error("Failed to generate recommendations", {
+      finishReason,
+      message: choice?.message,
+      usage: response.usage,
+    });
+    if (finishReason === "length") {
+      throw new Error("Response was truncated. The model ran out of tokens. Try reducing the number of books sent.");
+    }
+    throw new Error("Failed to generate recommendations: no content in response");
   }
 
   const parsed = JSON.parse(content) as { recommendations: Omit<BookRecommendation, "imageUrl">[] };

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { BackLink } from "@/components/BackLink";
 import { BookCard } from "@/components/BookCard";
 import { GiftSuggestionButton } from "@/components/GiftSuggestionButton";
+import { SaveRecentProfile } from "@/components/SaveRecentProfile";
 import { StatsHeader } from "@/components/StatsHeader";
 import { getCachedProfile } from "@/lib/cache";
 
@@ -21,6 +22,8 @@ export default async function ProfilePage({ params }: PageProps) {
     <div className="min-h-screen">
       {/* Background gradient */}
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/10 via-background to-background -z-10" />
+
+      <SaveRecentProfile userId={id} username={profile.userName} />
 
       <div className="container max-w-5xl mx-auto px-4 py-8">
         {/* Header */}

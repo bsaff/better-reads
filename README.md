@@ -82,16 +82,25 @@ The system requires at least one 5-star rated book to generate recommendations.
 - Vitest for testing
 
 
-## Future features
+## Future features / ideas
 
-- User profile support
-- Saved gift ideas
+- User profile login support
+- Save gift ideas for friends and family
 - Saved "friend/family" members for users
 - Verify accuracy of book recommendations
-- Frame it as a gifting app for readers? or a more good reads replacement
 - Suggest me something else (with optional additional context like past suggestions and user preference, e.g. "more horror")
+- Nearby libraries, bookstores.
+- Interesting book metrics:
+    - People currently reading this book in your area
+    - Number of people actively reading this book by country
+    - Number of people who have read this
+- Curated community-supported reading lists.
+- Partnerships with universities; course reading lists.
+- Top 5 books on your profile.
 
-## Future dev
+
+
+## Future technical improvements
 
 - Feed all read books in as context to improve recommendations and eliminate chance of "already read" reccommendations
 

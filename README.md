@@ -19,15 +19,16 @@ Open [http://localhost:3000](http://localhost:3000) and paste your Goodreads pro
 ## Features
 
 - Load any Goodreads profile via URL
+- Get personalized recommendations based on your favorite books
 - Stats overview: total books, pages read, average rating, reviews
 - Book cards with covers, ratings, dates, and reviews
 - Local caching for instant reload
 
 ## Finding Your Profile URL
 
-Your Goodreads profile URL looks like:
+Here's my Goodreads profile url; you can use it to test:
 ```
-https://www.goodreads.com/user/show/23506884-username
+"https://www.goodreads.com/user/show/23506884-ben"
 ```
 
 1. Go to [goodreads.com](https://www.goodreads.com)
@@ -78,6 +79,8 @@ No API key or authentication required for public profiles!
 - Suggest me something else (with optional additional context like past suggestions and user preference, e.g. "more horror")
 
 ## Future dev
+
+- Feed all read books in as context to improve recommendations and eliminate chance of "already read" reccommendations
 
 - Paginate / infinite scroll the reading history page.
 

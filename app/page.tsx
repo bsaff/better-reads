@@ -31,7 +31,7 @@ export default function Home() {
               <Input
                 name="url"
                 type="text"
-                placeholder="https://www.goodreads.com/user/show/12345-username"
+                placeholder="https://www.goodreads.com/user/show/23506884-ben"
                 className="h-12 text-base bg-input/50 border-border/50 placeholder:text-muted-foreground/50"
               />
               {state?.error && <p className="text-sm text-destructive">{state.error}</p>}

@@ -10,6 +10,9 @@ A simple app to view your Goodreads reading history.
 # Install dependencies
 npm install
 
+# Setup .env
+OPENAI_API_KEY=your_key_here
+
 # Start the development server
 npm run dev
 ```
@@ -19,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000) and paste your Goodreads pro
 ## Features
 
 - Load any Goodreads profile via URL
-- Get personalized recommendations based on your favorite books
+- **AI-Powered Book Recommendations**: Get personalized gift suggestions based on a reader's 5-star rated books. The system analyzes their favorite reads and suggests 5 new books they're likely to enjoy, complete with cover images, genres, and personalized reasoning.
 - Stats overview: total books, pages read, average rating, reviews
 - Book cards with covers, ratings, dates, and reviews
 - Local caching for instant reload
@@ -59,6 +62,16 @@ Goodreads provides public RSS feeds for user bookshelves. This app:
 4. Renders the books in a beautiful grid layout
 
 No API key or authentication required for public profiles!
+
+### Recommendations
+
+The recommendation system uses an llm to suggest perfect book gifts:
+
+1. **Analyzes Favorites**: Identifies all books the reader rated 5 stars (up to 50 books)
+2. **AI Generation**: Uses OpenAI's GPT model to generate 5 personalized recommendations based on reading patterns, genres, and themes from their favorites
+3. **How to use**: Click the "Suggest a Gift" button on any profile page to generate recommendations
+
+The system requires at least one 5-star rated book to generate recommendations.
 
 ## Tech Stack
 

@@ -1,0 +1,42 @@
+open a PR for this branch
+
+---
+
+i'm not seeing in in my "entire" dashboard (git alternative service)
+
+---
+
+do you know entire commands?
+
+---
+
+can you inspect my current remote and make sure it's pointing tot he proper git branch
+
+---
+
+okay oh man can you get the latest in this branch plz
+
+---
+
+and then can you investigate how we can set up checkpoints in entire? i see the session in the ui but no checkpoint, unsusre if that is there equivalant of a pr; can you reserach first and lmk Entire isn't enabled
+Enable Entire in this repository to configure checkpoint storage and agent integrations.
+
+---
+
+is see; but i can see the commits in the entire.io ui so i think we are okay for now right?
+
+---
+
+so is this all entire does right now? what about abour pr/mr workflows?
+
+---
+
+entire review
+
+---
+
+whats a branch trail/
+
+---
+
+looks good; can we also update the model to the latest equivalant as a part of this branch

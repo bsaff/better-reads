@@ -46,7 +46,7 @@ export function filterFiveStarBooks(books: Book[]): Book[] {
   return shuffled.slice(0, MAX_BOOKS_FOR_PROMPT);
 }
 
-const GIFT_MODEL = "gpt-5-mini";
+const GIFT_MODEL = "gpt-5.4-mini";
 const GIFT_REASONING_EFFORT = "minimal";
 const MAX_OUTPUT_TOKENS = 4000;
 

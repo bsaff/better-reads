@@ -1,0 +1,5 @@
+what llm model are we using for book recommendations right now?
+
+---
+
+can we do a first pass refactor of the api It's been a while since I implemented, and I want to check to make sure that the OpenAI interface API layer is up to date.

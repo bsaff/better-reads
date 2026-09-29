@@ -1,0 +1,65 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "01M3Q2BMZWVS4SGC2QW37MM28F",
+  "session_id": "b0685bb2-18e9-4354-b191-2a908ae3b00c",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-29T17:10:52.650232Z",
+  "branch": "refactor/gift-responses-api",
+  "checkpoints_count": 2,
+  "save_step_count": 1,
+  "files_touched": [
+    "actions/gift.ts",
+    "lib/gift.ts",
+    "lib/tests/gift.test.ts"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5[1m]",
+  "turn_id": "2ff0a35d89b6",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 50,
+    "cache_creation_tokens": 66627,
+    "cache_read_tokens": 1259894,
+    "output_tokens": 10095,
+    "api_call_count": 23
+  },
+  "session_metrics": {
+    "turn_count": 2
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-29T17:10:52.639374Z",
+    "agent_lines": 141,
+    "agent_removed": 66,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 141,
+    "total_lines_changed": 207,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 130,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".claude/settings.json": 90,
+        ".cursor/hooks.json": 40
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 130,
+      "user_lines_removed": 0,
+      "agent_lines_added": 141,
+      "agent_lines_removed": 66,
+      "user_added_per_file": {
+        ".claude/settings.json": 90,
+        ".cursor/hooks.json": 40
+      }
+    }
+  ]
+}

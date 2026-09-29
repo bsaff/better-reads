@@ -2,7 +2,7 @@
 
 import OpenAI from "openai";
 import { getCachedProfile } from "@/lib/cache";
-import { filterFiveStarBooks, generateGiftRecommendation } from "@/lib/gift";
+import { enrichWithCovers, filterFiveStarBooks, generateGiftRecommendation } from "@/lib/gift";
 import type { BookRecommendation } from "@/lib/types";
 
 const openai = new OpenAI({
@@ -33,7 +33,8 @@ export async function suggestGift(userId: string): Promise<GiftSuggestionResult>
   }
 
   try {
-    const recommendations = await generateGiftRecommendation(fiveStarBooks, openai);
+    const suggested = await generateGiftRecommendation(fiveStarBooks, openai);
+    const recommendations = await enrichWithCovers(suggested);
 
     const sentBooks = fiveStarBooks.map((book) => `${book.title} by ${book.author}`);
     const recommendedBooks = recommendations.map((rec) => `${rec.title} by ${rec.author}`);
